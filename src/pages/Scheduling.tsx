@@ -1,15 +1,22 @@
+import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { useMockData } from '@/hooks/useMockData';
-import { Calendar, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { Calendar, CheckCircle, Clock, AlertCircle, List, BarChart3 } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { projects } from '@/mock';
 import { getStatusColor, getPriorityColor } from '@/lib/colors';
+import { GanttChart } from '@/components/scheduling/GanttChart';
+import Button from '@/components/ui/Button';
+
+type ViewMode = 'list' | 'gantt';
 
 const Scheduling = () => {
   const { t } = useLanguage();
   const { tasks, toggleTaskComplete } = useMockData();
+  const [viewMode, setViewMode] = useState<ViewMode>('gantt');
+  const [selectedProjectId, setSelectedProjectId] = useState<string | undefined>(undefined);
 
   const getStatusIcon = (status: string) => {
     const statusColors = getStatusColor(status);
@@ -66,32 +73,76 @@ const Scheduling = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('common.schedule')}</h1>
-        <p className="text-gray-600 mt-1">Project Scheduling and Timeline Tracking</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">{t('common.schedule')}</h1>
+          <p className="text-gray-600 mt-1">Project Scheduling and Timeline Tracking</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant={viewMode === 'gantt' ? 'default' : 'outline'}
+            onClick={() => setViewMode('gantt')}
+            className="flex items-center gap-2"
+          >
+            <BarChart3 size={18} />
+            Gantt Chart
+          </Button>
+          <Button
+            variant={viewMode === 'list' ? 'default' : 'outline'}
+            onClick={() => setViewMode('list')}
+            className="flex items-center gap-2"
+          >
+            <List size={18} />
+            List View
+          </Button>
+        </div>
       </div>
 
-      {/* Gantt Chart Placeholder */}
+      {/* Project Filter */}
       <Card>
-        <CardHeader>
-          <CardTitle>Gantt Chart View</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-96 bg-gray-50 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
-            <div className="text-center">
-              <Calendar size={48} className="text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 font-medium">Gantt Chart Visualization</p>
-              <p className="text-sm text-gray-500 mt-2">
-                Interactive Gantt chart with critical path analysis will be displayed here
-              </p>
-            </div>
+        <CardContent className="p-4">
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium text-gray-700">Filter by Project:</label>
+            <select
+              value={selectedProjectId || 'all'}
+              onChange={(e) => setSelectedProjectId(e.target.value === 'all' ? undefined : e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-600 focus:border-primary-600"
+            >
+              <option value="all">All Projects</option>
+              {projects.map((project) => (
+                <option key={project.id} value={project.id}>
+                  {project.name}
+                </option>
+              ))}
+            </select>
           </div>
         </CardContent>
       </Card>
 
-      {/* Tasks by Project */}
-      {tasksByProject.map(({ project, tasks: projectTasks, progress: projectProgress }) => (
-        <Card key={project.id}>
+      {/* Gantt Chart View */}
+      {viewMode === 'gantt' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Gantt Chart View</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="h-[600px]">
+              <GanttChart
+                projects={projects}
+                tasks={tasks}
+                selectedProjectId={selectedProjectId}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* List View */}
+      {viewMode === 'list' &&
+        tasksByProject
+          .filter(({ project }) => !selectedProjectId || project.id === selectedProjectId)
+          .map(({ project, tasks: projectTasks, progress: projectProgress }) => (
+            <Card key={project.id}>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -181,8 +232,9 @@ const Scheduling = () => {
               })}
             </div>
           </CardContent>
-        </Card>
-      ))}
+            </Card>
+          ))
+      }
     </div>
   );
 };

@@ -73,7 +73,7 @@ const Dashboard = () => {
     value,
   }));
 
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+  const COLORS = ['#0284c7', '#10b981', '#f59e0b', '#f97316'];
 
   // Filter projects, tasks, and risks based on search query
   const filteredProjects = useMemo(() => {
@@ -182,11 +182,11 @@ const Dashboard = () => {
                         Target: {kpi.target} {kpi.unit}
                       </p>
                     </div>
-                    <div className={`p-3 rounded-full ${isPositive ? 'bg-green-100' : 'bg-red-100'}`}>
+                    <div className={`p-3 rounded-full ${isPositive ? 'bg-success-50' : 'bg-error-50'}`}>
                       {isPositive ? (
-                        <TrendingUp className="text-green-600" size={24} />
+                        <TrendingUp className="text-success-600" size={24} />
                       ) : (
-                        <TrendingDown className="text-red-600" size={24} />
+                        <TrendingDown className="text-error-600" size={24} />
                       )}
                     </div>
                   </div>
@@ -211,7 +211,7 @@ const Dashboard = () => {
                 <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="progress" fill="#3b82f6" />
+                <Bar dataKey="progress" fill="#0284c7" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -239,8 +239,8 @@ const Dashboard = () => {
                   labelFormatter={(label) => `Project: ${label}`}
                 />
                 <Legend />
-                <Bar dataKey="budget" fill="#94a3b8" name="Budget" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="spent" fill="#3b82f6" name="Spent" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="budget" fill="#cbd5e1" name="Budget" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="spent" fill="#0284c7" name="Spent" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -290,7 +290,7 @@ const Dashboard = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="progress" stroke="#3b82f6" strokeWidth={2} />
+                <Line type="monotone" dataKey="progress" stroke="#0284c7" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -323,7 +323,7 @@ const Dashboard = () => {
                     <p className="text-sm font-medium">{project.progress}%</p>
                     <div className="w-24 h-2 bg-gray-200 rounded-full mt-1">
                       <div
-                        className="h-2 bg-primary-600 rounded-full"
+                        className="h-2 bg-primary-600 rounded-full transition-all"
                         style={{ width: `${project.progress}%` }}
                       />
                     </div>
@@ -351,10 +351,10 @@ const Dashboard = () => {
               {activeRisks.length > 0 ? (
                 activeRisks.map((risk) => {
                 const impactColors: Record<string, string> = {
-                  Low: 'bg-green-100 text-green-800',
-                  Medium: 'bg-yellow-100 text-yellow-800',
-                  High: 'bg-orange-100 text-orange-800',
-                  Critical: 'bg-red-100 text-red-800',
+                  Low: 'bg-success-50 text-success-700',
+                  Medium: 'bg-warning-50 text-warning-700',
+                  High: 'bg-accent-50 text-accent-700',
+                  Critical: 'bg-error-50 text-error-700',
                 };
 
                 return (
@@ -414,10 +414,10 @@ const Dashboard = () => {
                   <span
                     className={`px-3 py-1 rounded text-xs font-medium ${
                       task.status === 'Completed'
-                        ? 'bg-green-100 text-green-800'
+                        ? 'bg-success-50 text-success-700'
                         : task.status === 'In Progress'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-gray-100 text-gray-800'
+                        ? 'bg-primary-50 text-primary-700'
+                        : 'bg-gray-50 text-gray-700'
                     }`}
                   >
                     {task.status}

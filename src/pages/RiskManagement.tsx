@@ -2,6 +2,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { risks, projects } from '@/mock';
 import { AlertTriangle, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { getStatusColor, getImpactColor, getPriorityColor } from '@/lib/colors';
 import {
   BarChart,
   Bar,
@@ -19,53 +20,22 @@ const RiskManagement = () => {
   const { t } = useLanguage();
 
   const getStatusIcon = (status: string) => {
+    const statusColors = getStatusColor(status);
     switch (status) {
       case 'Closed':
-        return <CheckCircle className="text-green-600" size={20} />;
+        return <CheckCircle className={statusColors.icon} size={20} />;
       case 'Mitigated':
-        return <CheckCircle className="text-blue-600" size={20} />;
+        return <CheckCircle className={statusColors.icon} size={20} />;
       case 'Assessed':
-        return <Clock className="text-yellow-600" size={20} />;
+        return <Clock className={statusColors.icon} size={20} />;
       default:
-        return <AlertTriangle className="text-orange-600" size={20} />;
+        return <AlertTriangle className={statusColors.icon} size={20} />;
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Closed':
-        return 'bg-green-100 text-green-800';
-      case 'Mitigated':
-        return 'bg-blue-100 text-blue-800';
-      case 'Assessed':
-        return 'bg-yellow-100 text-yellow-800';
-      default:
-        return 'bg-orange-100 text-orange-800';
-    }
-  };
-
-  const getImpactColor = (impact: string) => {
-    switch (impact) {
-      case 'Critical':
-        return 'bg-red-100 text-red-800';
-      case 'High':
-        return 'bg-orange-100 text-orange-800';
-      case 'Medium':
-        return 'bg-yellow-100 text-yellow-800';
-      default:
-        return 'bg-green-100 text-green-800';
-    }
-  };
-
-  const getProbabilityColor = (probability: string) => {
-    switch (probability) {
-      case 'High':
-        return 'bg-red-100 text-red-800';
-      case 'Medium':
-        return 'bg-yellow-100 text-yellow-800';
-      default:
-        return 'bg-green-100 text-green-800';
-    }
+  const getStatusBadgeColor = (status: string) => {
+    const statusColors = getStatusColor(status);
+    return `${statusColors.bg} ${statusColors.text}`;
   };
 
   // Risk distribution by category
@@ -128,7 +98,7 @@ const RiskManagement = () => {
                   {risks.filter((r) => r.status !== 'Closed').length}
                 </p>
               </div>
-              <Clock className="text-yellow-600" size={32} />
+              <Clock className="text-warning-600" size={32} />
             </div>
           </CardContent>
         </Card>
@@ -142,7 +112,7 @@ const RiskManagement = () => {
                   {risks.filter((r) => r.impact === 'High' || r.impact === 'Critical').length}
                 </p>
               </div>
-              <XCircle className="text-red-600" size={32} />
+              <XCircle className="text-error-600" size={32} />
             </div>
           </CardContent>
         </Card>
@@ -156,7 +126,7 @@ const RiskManagement = () => {
                   {risks.filter((r) => r.status === 'Mitigated' || r.status === 'Closed').length}
                 </p>
               </div>
-              <CheckCircle className="text-green-600" size={32} />
+              <CheckCircle className="text-success-600" size={32} />
             </div>
           </CardContent>
         </Card>
@@ -175,7 +145,7 @@ const RiskManagement = () => {
                 <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="value" fill="#3b82f6" />
+                <Bar dataKey="value" fill="#0284c7" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -251,12 +221,12 @@ const RiskManagement = () => {
                             Impact: {risk.impact}
                           </span>
                           <span
-                            className={`px-3 py-1 rounded text-xs font-medium ${getProbabilityColor(risk.probability)}`}
+                            className={`px-3 py-1 rounded text-xs font-medium ${getPriorityColor(risk.probability).bg} ${getPriorityColor(risk.probability).text}`}
                           >
                             Probability: {risk.probability}
                           </span>
                           <span
-                            className={`px-3 py-1 rounded text-xs font-medium ${getStatusColor(risk.status)}`}
+                            className={`px-3 py-1 rounded text-xs font-medium ${getStatusBadgeColor(risk.status)}`}
                           >
                             {risk.status}
                           </span>

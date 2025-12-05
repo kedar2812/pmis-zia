@@ -5,48 +5,34 @@ import { Calendar, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { projects } from '@/mock';
+import { getStatusColor, getPriorityColor } from '@/lib/colors';
 
 const Scheduling = () => {
   const { t } = useLanguage();
   const { tasks, toggleTaskComplete } = useMockData();
 
   const getStatusIcon = (status: string) => {
+    const statusColors = getStatusColor(status);
     switch (status) {
       case 'Completed':
-        return <CheckCircle className="text-green-600" size={18} />;
+        return <CheckCircle className={statusColors.icon} size={18} />;
       case 'In Progress':
-        return <Clock className="text-blue-600" size={18} />;
+        return <Clock className={statusColors.icon} size={18} />;
       case 'Delayed':
-        return <AlertCircle className="text-red-600" size={18} />;
+        return <AlertCircle className={statusColors.icon} size={18} />;
       default:
-        return <Calendar className="text-gray-600" size={18} />;
+        return <Calendar className={statusColors.icon} size={18} />;
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Completed':
-        return 'bg-green-100 text-green-800';
-      case 'In Progress':
-        return 'bg-blue-100 text-blue-800';
-      case 'Delayed':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+  const getStatusBadgeColor = (status: string) => {
+    const statusColors = getStatusColor(status);
+    return `${statusColors.bg} ${statusColors.text}`;
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'Critical':
-        return 'bg-red-100 text-red-800';
-      case 'High':
-        return 'bg-orange-100 text-orange-800';
-      case 'Medium':
-        return 'bg-yellow-100 text-yellow-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+  const getPriorityBadgeColor = (priority: string) => {
+    const priorityColors = getPriorityColor(priority);
+    return `${priorityColors.bg} ${priorityColors.text}`;
   };
 
   // Group tasks by project
@@ -129,7 +115,7 @@ const Scheduling = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className={`p-4 rounded-lg border-2 transition-all ${
                       isCritical
-                        ? 'bg-red-50 border-red-200'
+                        ? 'bg-error-50 border-error-200'
                         : 'bg-gray-50 border-gray-200'
                     }`}
                   >
@@ -147,7 +133,7 @@ const Scheduling = () => {
                             {getStatusIcon(task.status)}
                             <h3 className="font-medium">{task.name}</h3>
                             {isCritical && (
-                              <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-medium">
+                              <span className="px-2 py-1 bg-error-50 text-error-700 rounded text-xs font-medium border border-error-200">
                                 Critical Path
                               </span>
                             )}
@@ -161,12 +147,12 @@ const Scheduling = () => {
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <span
-                          className={`px-2 py-1 rounded text-xs font-medium ${getPriorityColor(task.priority)}`}
+                          className={`px-2 py-1 rounded text-xs font-medium ${getPriorityBadgeColor(task.priority)}`}
                         >
                           {task.priority}
                         </span>
                         <span
-                          className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(task.status)}`}
+                          className={`px-2 py-1 rounded text-xs font-medium ${getStatusBadgeColor(task.status)}`}
                         >
                           {task.status}
                         </span>
@@ -183,8 +169,8 @@ const Scheduling = () => {
                             initial={{ width: 0 }}
                             animate={{ width: `${task.progress}%` }}
                             transition={{ duration: 0.5 }}
-                            className={`h-2 rounded-full ${
-                              task.progress === 100 ? 'bg-green-600' : 'bg-primary-600'
+                            className={`h-2 rounded-full transition-all ${
+                              task.progress === 100 ? 'bg-success-600' : 'bg-primary-600'
                             }`}
                           />
                         </div>

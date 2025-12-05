@@ -8,6 +8,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { FileText, Download, Eye, CheckCircle, XCircle, Clock, Upload, Search, Trash2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { toast } from 'sonner';
+import { getStatusColor } from '@/lib/colors';
 import type { Document } from '@/mock/interfaces';
 
 const EDMS = () => {
@@ -28,29 +29,22 @@ const EDMS = () => {
   };
 
   const getStatusIcon = (status: string) => {
+    const statusColors = getStatusColor(status);
     switch (status) {
       case 'Approved':
-        return <CheckCircle className="text-green-600" size={18} />;
+        return <CheckCircle className={statusColors.icon} size={18} />;
       case 'Rejected':
-        return <XCircle className="text-red-600" size={18} />;
+        return <XCircle className={statusColors.icon} size={18} />;
       case 'Under Review':
-        return <Clock className="text-yellow-600" size={18} />;
+        return <Clock className={statusColors.icon} size={18} />;
       default:
-        return <FileText className="text-gray-600" size={18} />;
+        return <FileText className={statusColors.icon} size={18} />;
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Approved':
-        return 'bg-green-100 text-green-800';
-      case 'Rejected':
-        return 'bg-red-100 text-red-800';
-      case 'Under Review':
-        return 'bg-yellow-100 text-yellow-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+  const getStatusBadgeColor = (status: string) => {
+    const statusColors = getStatusColor(status);
+    return `${statusColors.bg} ${statusColors.text}`;
   };
 
   // Filter and search documents
@@ -232,12 +226,12 @@ const EDMS = () => {
                         <td className="py-3 px-4 text-sm text-gray-600">{doc.version}</td>
                         <td className="py-3 px-4 text-sm text-gray-600">{formatFileSize(doc.fileSize)}</td>
                         <td className="py-3 px-4">
-                          <div className="flex items-center gap-2">
-                            {getStatusIcon(doc.status)}
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(doc.status)}`}>
-                              {doc.status}
-                            </span>
-                          </div>
+                        <div className="flex items-center gap-2">
+                          {getStatusIcon(doc.status)}
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusBadgeColor(doc.status)}`}>
+                            {doc.status}
+                          </span>
+                        </div>
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-600">{doc.uploadedBy}</td>
                         <td className="py-3 px-4 text-sm text-gray-600">

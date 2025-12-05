@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { FolderOpen, Plus, Search, Calendar, DollarSign, TrendingUp, MapPin, User } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { motion } from 'framer-motion';
+import { getStatusColor } from '@/lib/colors';
 import type { Project } from '@/mock/interfaces';
 
 const Projects = () => {
@@ -36,21 +37,9 @@ const Projects = () => {
     await addProject(projectData as Project);
   };
 
-  const getStatusColor = (status: Project['status']) => {
-    switch (status) {
-      case 'Completed':
-        return 'bg-green-100 text-green-800';
-      case 'In Progress':
-        return 'bg-blue-100 text-blue-800';
-      case 'Planning':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'On Hold':
-        return 'bg-orange-100 text-orange-800';
-      case 'Cancelled':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+  const getStatusBadgeColor = (status: Project['status']) => {
+    const statusColors = getStatusColor(status);
+    return `${statusColors.bg} ${statusColors.text}`;
   };
 
   const formatCurrency = (amount: number): string => {
@@ -146,7 +135,7 @@ const Projects = () => {
                       <p className="text-sm text-gray-600 line-clamp-2">{project.description}</p>
                     </div>
                     <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(project.status)}`}
+                      className={`px-2 py-1 rounded text-xs font-medium ${getStatusBadgeColor(project.status)}`}
                     >
                       {project.status}
                     </span>
@@ -165,12 +154,12 @@ const Projects = () => {
                           initial={{ width: 0 }}
                           animate={{ width: `${project.progress}%` }}
                           transition={{ duration: 0.5 }}
-                          className={`h-2 rounded-full ${
+                          className={`h-2 rounded-full transition-all ${
                             project.progress === 100
-                              ? 'bg-green-600'
+                              ? 'bg-success-600'
                               : project.progress >= 50
-                              ? 'bg-blue-600'
-                              : 'bg-yellow-600'
+                              ? 'bg-primary-600'
+                              : 'bg-warning-500'
                           }`}
                         />
                       </div>
@@ -201,7 +190,7 @@ const Projects = () => {
 
                     {/* Category Badge */}
                     <div className="pt-2 border-t border-gray-200">
-                      <span className="inline-block px-2 py-1 bg-primary-50 text-primary-700 rounded text-xs font-medium">
+                      <span className="inline-block px-2 py-1 bg-primary-50 text-primary-700 rounded text-xs font-medium border border-primary-200">
                         {project.category}
                       </span>
                     </div>
@@ -216,12 +205,12 @@ const Projects = () => {
                       </div>
                       <div className="w-full h-1.5 bg-gray-200 rounded-full">
                         <div
-                          className={`h-1.5 rounded-full ${
+                          className={`h-1.5 rounded-full transition-all ${
                             (project.spent / project.budget) * 100 > 90
-                              ? 'bg-red-600'
+                              ? 'bg-error-600'
                               : (project.spent / project.budget) * 100 > 75
-                              ? 'bg-yellow-600'
-                              : 'bg-green-600'
+                              ? 'bg-warning-500'
+                              : 'bg-success-600'
                           }`}
                           style={{ width: `${Math.min((project.spent / project.budget) * 100, 100)}%` }}
                         />

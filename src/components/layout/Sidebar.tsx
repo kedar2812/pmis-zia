@@ -19,7 +19,7 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 const Sidebar = () => {
-  const { accessibleModules, hasPermission } = useAuth();
+  const { hasPermission } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -189,7 +189,7 @@ const Sidebar = () => {
             onClick={() => setIsMobileOpen(false)}
           />
         )}
-      </aside>
+      </motion.aside>
     </>
   );
 };

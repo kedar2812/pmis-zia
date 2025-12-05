@@ -3,10 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Upload, File, CheckCircle } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
-import type { Document } from '@/mock/interfaces';
 
 interface UploadModalProps {
   isOpen: boolean;
@@ -20,8 +17,6 @@ export const UploadModal = ({ isOpen, onClose, onUpload }: UploadModalProps) => 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { user } = useAuth();
-  const { t } = useLanguage();
 
   const handleDragEnter = (e: DragEvent) => {
     e.preventDefault();

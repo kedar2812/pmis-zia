@@ -33,21 +33,30 @@ const GIS = () => {
         // Add GIS features
         gisFeatures.forEach((feature) => {
           if (feature.geometry.type === 'Point') {
-            const [lng, lat] = feature.geometry.coordinates[0];
+            const pointCoords = feature.geometry.coordinates[0] as number[];
+            const [lng, lat] = pointCoords;
             L.default
               .marker([lat, lng])
               .addTo(map)
               .bindPopup(`<b>${feature.properties.name}</b><br>${feature.properties.description}`);
           } else if (feature.geometry.type === 'Polygon') {
-            const coords = feature.geometry.coordinates[0].map(([lng, lat]) => [lat, lng]);
+            const polygonCoords = feature.geometry.coordinates[0] as unknown as number[][];
+            const coords = polygonCoords.map((coord: number[]) => {
+              const [lng, lat] = coord;
+              return [lat, lng] as [number, number];
+            });
             L.default
-              .polygon(coords as [number, number][])
+              .polygon(coords)
               .addTo(map)
               .bindPopup(`<b>${feature.properties.name}</b><br>${feature.properties.description}`);
           } else if (feature.geometry.type === 'LineString') {
-            const coords = feature.geometry.coordinates.map(([lng, lat]) => [lat, lng]);
+            const lineCoords = feature.geometry.coordinates as number[][];
+            const coords = lineCoords.map((coord: number[]) => {
+              const [lng, lat] = coord;
+              return [lat, lng] as [number, number];
+            });
             L.default
-              .polyline(coords as [number, number][])
+              .polyline(coords)
               .addTo(map)
               .bindPopup(`<b>${feature.properties.name}</b><br>${feature.properties.description}`);
           }

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { useMockData } from '@/hooks/useMockData';
@@ -9,7 +8,7 @@ import { projects } from '@/mock';
 
 const Scheduling = () => {
   const { t } = useLanguage();
-  const { tasks, toggleTaskComplete, updateTask } = useMockData();
+  const { tasks, toggleTaskComplete } = useMockData();
 
   const getStatusIcon = (status: string) => {
     switch (status) {

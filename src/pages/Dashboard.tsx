@@ -19,7 +19,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { TrendingUp, TrendingDown, AlertCircle, CheckCircle, Search } from 'lucide-react';
+import { TrendingUp, TrendingDown, Search } from 'lucide-react';
 import { toast } from 'sonner';
 
 const Dashboard = () => {
@@ -241,7 +241,7 @@ const Dashboard = () => {
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {riskPieData.map((entry, index) => (
+                  {riskPieData.map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

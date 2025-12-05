@@ -47,6 +47,22 @@ Supports three languages:
 - Hindi (हिंदी)
 - Telugu (తెలుగు)
 
+## Google Maps API Setup
+
+To use the GIS mapping features, you need to set up a Google Maps API key:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the "Maps JavaScript API" in the API Library
+4. Create credentials (API Key) in the Credentials section
+5. (Optional) Restrict the API key to your domain for security
+6. Create a `.env` file in the root directory:
+   ```
+   VITE_GOOGLE_MAPS_API_KEY=your_api_key_here
+   ```
+
+**Note:** Google Maps offers a free tier with $200 monthly credit, which is sufficient for most development and small-scale production use.
+
 ## Getting Started
 
 ### Prerequisites

@@ -1,73 +1,14 @@
-import { useEffect, useRef } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { gisFeatures, projects } from '@/mock';
 import { MapPin } from 'lucide-react';
+import { GoogleMap } from '@/components/gis/GoogleMap';
 
 const GIS = () => {
   const { t } = useLanguage();
-  const mapRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (mapRef.current) {
-      // Initialize Leaflet map
-      import('leaflet').then((L) => {
-        const map = L.default.map(mapRef.current!).setView([17.6868, 77.6093], 13);
-
-        // Add OpenStreetMap tiles
-        L.default
-          .tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 19,
-          })
-          .addTo(map);
-
-        // Add markers for projects
-        projects.forEach((project) => {
-          L.default
-            .marker([project.location.lat, project.location.lng])
-            .addTo(map)
-            .bindPopup(`<b>${project.name}</b><br>${project.description}`);
-        });
-
-        // Add GIS features
-        gisFeatures.forEach((feature) => {
-          if (feature.geometry.type === 'Point') {
-            const pointCoords = feature.geometry.coordinates[0] as number[];
-            const [lng, lat] = pointCoords;
-            L.default
-              .marker([lat, lng])
-              .addTo(map)
-              .bindPopup(`<b>${feature.properties.name}</b><br>${feature.properties.description}`);
-          } else if (feature.geometry.type === 'Polygon') {
-            const polygonCoords = feature.geometry.coordinates[0] as unknown as number[][];
-            const coords = polygonCoords.map((coord: number[]) => {
-              const [lng, lat] = coord;
-              return [lat, lng] as [number, number];
-            });
-            L.default
-              .polygon(coords)
-              .addTo(map)
-              .bindPopup(`<b>${feature.properties.name}</b><br>${feature.properties.description}`);
-          } else if (feature.geometry.type === 'LineString') {
-            const lineCoords = feature.geometry.coordinates as number[][];
-            const coords = lineCoords.map((coord: number[]) => {
-              const [lng, lat] = coord;
-              return [lat, lng] as [number, number];
-            });
-            L.default
-              .polyline(coords)
-              .addTo(map)
-              .bindPopup(`<b>${feature.properties.name}</b><br>${feature.properties.description}`);
-          }
-        });
-
-        return () => {
-          map.remove();
-        };
-      });
-    }
-  }, []);
+  
+  // Get API key from environment variable
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   return (
     <div className="space-y-6">
@@ -78,10 +19,13 @@ const GIS = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Project Locations Map</CardTitle>
+          <CardTitle>Project Locations Map - India</CardTitle>
+          <p className="text-sm text-gray-600 mt-1">
+            Interactive map showing all project locations and GIS features across India
+          </p>
         </CardHeader>
         <CardContent>
-          <div ref={mapRef} className="h-[600px] w-full rounded-lg" />
+          <GoogleMap projects={projects} gisFeatures={gisFeatures} apiKey={apiKey} />
         </CardContent>
       </Card>
 

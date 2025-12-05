@@ -5,6 +5,7 @@ import { ToastProvider } from './components/ui/Toast';
 import AppLayout from './components/layout/AppLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Projects from './pages/Projects';
 import EDMS from './pages/EDMS';
 import Scheduling from './pages/Scheduling';
 import CostManagement from './pages/CostManagement';
@@ -31,6 +32,7 @@ const AppRoutes = () => {
       >
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="projects" element={<Projects />} />
         <Route path="edms" element={<EDMS />} />
         <Route path="scheduling" element={<Scheduling />} />
         <Route path="cost" element={<CostManagement />} />

@@ -14,6 +14,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  FolderOpen,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -39,6 +40,13 @@ const Sidebar = () => {
       icon: LayoutDashboard,
       path: '/dashboard',
       permission: 'dashboard:view',
+    },
+    {
+      id: 'projects',
+      label: t('common.projects'),
+      icon: FolderOpen,
+      path: '/projects',
+      permission: 'dashboard:view', // All users who can view dashboard can view projects
     },
     {
       id: 'edms',

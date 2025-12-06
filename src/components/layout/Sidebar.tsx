@@ -127,8 +127,8 @@ const Sidebar = () => {
                   exit={{ opacity: 0 }}
                   className="flex-1"
                 >
-                  <h2 className="text-xl font-bold text-primary-950">PMIS ZIA</h2>
-                  <p className="text-sm text-gray-600">Programme Management</p>
+                  <h2 className="text-xl font-bold text-primary-950">{t('sidebar.pmisZia')}</h2>
+                  <p className="text-sm text-gray-600">{t('sidebar.programmeManagement')}</p>
                 </motion.div>
               ) : (
                 <motion.div
@@ -145,7 +145,7 @@ const Sidebar = () => {
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="hidden lg:flex p-2 rounded-md hover:bg-gray-100 transition-colors"
-              aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              aria-label={isCollapsed ? t('sidebar.expandSidebar') : t('sidebar.collapseSidebar')}
             >
               {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
             </button>

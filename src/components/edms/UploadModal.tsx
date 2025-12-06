@@ -5,6 +5,7 @@ import { X, Upload, File, CheckCircle } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface UploadModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ interface UploadModalProps {
 }
 
 export const UploadModal = ({ isOpen, onClose, onUpload }: UploadModalProps) => {
+  const { t } = useLanguage();
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
@@ -67,16 +69,16 @@ export const UploadModal = ({ isOpen, onClose, onUpload }: UploadModalProps) => 
       await onUpload(file);
       setUploadProgress(100);
       clearInterval(interval);
-      toast.success('File uploaded successfully!', {
-        description: `${file.name} has been added to the repository.`,
+      toast.success(t('upload.fileUploadedSuccessfully'), {
+        description: `${file.name} ${t('upload.hasBeenAdded')}`,
       });
       setTimeout(() => {
         handleClose();
       }, 1500);
     } catch (error) {
       clearInterval(interval);
-      toast.error('Upload failed', {
-        description: 'Please try again.',
+      toast.error(t('upload.uploadFailed'), {
+        description: t('upload.tryAgain'),
       });
       setIsUploading(false);
     }
@@ -120,7 +122,7 @@ export const UploadModal = ({ isOpen, onClose, onUpload }: UploadModalProps) => 
         >
           <Card className="p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold">Upload Document</h2>
+              <h2 className="text-xl font-semibold">{t('upload.uploadDocument')}</h2>
               <button
                 onClick={handleClose}
                 className="p-1 rounded-md hover:bg-gray-100 transition-colors"
@@ -145,11 +147,11 @@ export const UploadModal = ({ isOpen, onClose, onUpload }: UploadModalProps) => 
               >
                 <Upload className="mx-auto mb-4 text-gray-400" size={48} />
                 <p className="text-sm font-medium text-gray-700 mb-2">
-                  Drag and drop your file here
+                  {t('upload.dragAndDrop')}
                 </p>
-                <p className="text-xs text-gray-500 mb-4">or</p>
+                <p className="text-xs text-gray-500 mb-4">{t('upload.or')}</p>
                 <Button variant="outline" onClick={(e) => e.stopPropagation()}>
-                  Browse Files
+                  {t('upload.browseFiles')}
                 </Button>
                 <input
                   ref={fileInputRef}
@@ -179,7 +181,7 @@ export const UploadModal = ({ isOpen, onClose, onUpload }: UploadModalProps) => 
                 {isUploading && (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Uploading...</span>
+                      <span className="text-gray-600">{t('common.uploading')}</span>
                       <span className="font-medium">{uploadProgress}%</span>
                     </div>
                     <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">

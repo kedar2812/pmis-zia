@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { useMockData } from '@/hooks/useMockData';
 import { CreateProjectModal } from '@/components/projects/CreateProjectModal';
+import { KPIDetailModal } from '@/components/dashboard/KPIDetailModal';
 import { kpis, risks, tasks } from '@/mock';
 import Button from '@/components/ui/Button';
 import { Plus } from 'lucide-react';
@@ -33,6 +34,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedKPI, setSelectedKPI] = useState<typeof kpis[0] | null>(null);
+  const [isKPIModalOpen, setIsKPIModalOpen] = useState(false);
   const { projects, addProject } = useMockData();
 
   // Check if user can create projects (SPV_Official or PMNC_Team)
@@ -41,9 +44,13 @@ const Dashboard = () => {
   const handleKPIClick = (kpi: typeof kpis[0]) => {
     if (kpi.category === 'Risk') {
       navigate('/risk');
-      toast.info('Navigating to Risk Management', {
-        description: 'Viewing risk details and mitigation plans.',
+      toast.info(t('dashboard.navigatingToRisk'), {
+        description: t('dashboard.viewingRiskDetails'),
       });
+    } else {
+      // Open KPI detail modal for all other KPIs
+      setSelectedKPI(kpi);
+      setIsKPIModalOpen(true);
     }
   };
 
@@ -132,7 +139,7 @@ const Dashboard = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <input
                 type="text"
-                placeholder="Search projects, tasks, risks..."
+                placeholder={t('dashboard.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-600 focus:border-primary-600 bg-white"
@@ -146,7 +153,7 @@ const Dashboard = () => {
               className="bg-primary-950 hover:bg-primary-900"
             >
               <Plus size={18} className="mr-2" />
-              Create Project
+              {t('dashboard.createProject')}
             </Button>
           )}
         </div>
@@ -156,7 +163,6 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.slice(0, 4).map((kpi) => {
           const isPositive = kpi.trend === 'up' || (kpi.trend === 'stable' && kpi.value >= kpi.target);
-          const isClickable = kpi.category === 'Risk';
           return (
             <motion.div
               key={kpi.id}
@@ -164,12 +170,8 @@ const Dashboard = () => {
               whileTap={{ scale: 0.98 }}
             >
               <Card
-                className={`transition-all duration-200 ${
-                  isClickable
-                    ? 'cursor-pointer hover:shadow-lg hover:border-primary-600'
-                    : ''
-                }`}
-                onClick={() => isClickable && handleKPIClick(kpi)}
+                className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:border-primary-600"
+                onClick={() => handleKPIClick(kpi)}
               >
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
@@ -179,7 +181,7 @@ const Dashboard = () => {
                         {kpi.value} {kpi.unit}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        Target: {kpi.target} {kpi.unit}
+                        {t('common.target')}: {kpi.target} {kpi.unit}
                       </p>
                     </div>
                     <div className={`p-3 rounded-full ${isPositive ? 'bg-success-50' : 'bg-error-50'}`}>
@@ -202,7 +204,7 @@ const Dashboard = () => {
         {/* Project Progress Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>{t('dashboard.recentProjects')} - Progress</CardTitle>
+            <CardTitle>{t('dashboard.recentProjects')} - {t('dashboard.progress')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -220,7 +222,7 @@ const Dashboard = () => {
         {/* Budget vs Spent Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>Budget vs Spent (in Crores)</CardTitle>
+            <CardTitle>{t('dashboard.budgetVsSpent')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -239,8 +241,8 @@ const Dashboard = () => {
                   labelFormatter={(label) => `Project: ${label}`}
                 />
                 <Legend />
-                <Bar dataKey="budget" fill="#cbd5e1" name="Budget" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="spent" fill="#0284c7" name="Spent" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="budget" fill="#cbd5e1" name={t('common.budget')} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="spent" fill="#0284c7" name={t('common.spent')} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -252,7 +254,7 @@ const Dashboard = () => {
         {/* Risk Distribution Pie Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>{t('dashboard.activeRisks')} - Distribution</CardTitle>
+            <CardTitle>{t('dashboard.activeRisks')} - {t('dashboard.riskDistribution')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -280,7 +282,7 @@ const Dashboard = () => {
         {/* Project Timeline */}
         <Card>
           <CardHeader>
-            <CardTitle>Project Timeline</CardTitle>
+            <CardTitle>{t('dashboard.projectTimeline')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -306,7 +308,7 @@ const Dashboard = () => {
               {t('dashboard.recentProjects')}
               {searchQuery && (
                 <span className="text-sm font-normal text-gray-500 ml-2">
-                  ({filteredProjects.length} found)
+                  ({filteredProjects.length} {t('common.found')})
                 </span>
               )}
             </CardTitle>
@@ -341,7 +343,7 @@ const Dashboard = () => {
               {t('dashboard.activeRisks')}
               {searchQuery && (
                 <span className="text-sm font-normal text-gray-500 ml-2">
-                  ({activeRisks.length} found)
+                  ({activeRisks.length} {t('common.found')})
                 </span>
               )}
             </CardTitle>
@@ -375,7 +377,7 @@ const Dashboard = () => {
                 })
               ) : (
                 <div className="text-center py-8 text-gray-500">
-                  {searchQuery ? 'No risks found matching your search.' : 'No active risks.'}
+                  {searchQuery ? t('dashboard.noRisksFound') : t('dashboard.noActiveRisks')}
                 </div>
               )}
             </div>
@@ -390,7 +392,7 @@ const Dashboard = () => {
             {t('dashboard.upcomingTasks')}
             {searchQuery && (
               <span className="text-sm font-normal text-gray-500 ml-2">
-                ({upcomingTasks.length} found)
+                  ({upcomingTasks.length} {t('common.found')})
               </span>
             )}
           </CardTitle>
@@ -427,7 +429,7 @@ const Dashboard = () => {
               ))
             ) : (
               <div className="text-center py-8 text-gray-500">
-                {searchQuery ? 'No tasks found matching your search.' : 'No upcoming tasks.'}
+                {searchQuery ? t('dashboard.noTasksFound') : t('dashboard.noUpcomingTasks')}
               </div>
             )}
           </div>
@@ -438,6 +440,15 @@ const Dashboard = () => {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onSave={handleCreateProject}
+      />
+
+      <KPIDetailModal
+        isOpen={isKPIModalOpen}
+        onClose={() => {
+          setIsKPIModalOpen(false);
+          setSelectedKPI(null);
+        }}
+        kpi={selectedKPI}
       />
     </div>
   );

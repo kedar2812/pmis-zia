@@ -19,6 +19,7 @@ export const GoogleMap = ({ projects, gisFeatures, apiKey }: GoogleMapProps) => 
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const overlayRef = useRef<google.maps.GroundOverlay | null>(null);
 
   // Load Google Maps script
   useEffect(() => {
@@ -28,7 +29,8 @@ export const GoogleMap = ({ projects, gisFeatures, apiKey }: GoogleMapProps) => 
     }
 
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey || 'YOUR_API_KEY'}&libraries=places,drawing`;
+    // API key is loaded from environment variable VITE_GOOGLE_MAPS_API_KEY
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey || ''}&libraries=places,drawing`;
     script.async = true;
     script.defer = true;
     script.onload = () => {
@@ -52,12 +54,12 @@ export const GoogleMap = ({ projects, gisFeatures, apiKey }: GoogleMapProps) => 
   useEffect(() => {
     if (!isLoaded || !mapRef.current || !window.google?.maps) return;
 
-    // Center map on India (approximate center)
-    const indiaCenter = { lat: 20.5937, lng: 78.9629 };
+    // Center map on Zaheerabad, Telangana, India (NIMZ area)
+    const zaheerabadCenter = { lat: 17.6816, lng: 77.6077 };
 
     const googleMap = new window.google.maps.Map(mapRef.current, {
-      center: indiaCenter,
-      zoom: 5,
+      center: zaheerabadCenter,
+      zoom: 13,
       mapTypeId: window.google.maps.MapTypeId.ROADMAP,
       mapTypeControl: true,
       mapTypeControlOptions: {
@@ -84,9 +86,13 @@ export const GoogleMap = ({ projects, gisFeatures, apiKey }: GoogleMapProps) => 
 
     setMap(googleMap);
 
-    // Fit bounds to show all projects
-    if (projects.length > 0) {
+    // Fit bounds to show NIMZ area or all projects
+    if (projects.length > 0 || gisFeatures.length > 0) {
       const bounds = new window.google.maps.LatLngBounds();
+      
+      // Include NIMZ bounds
+      bounds.extend(new window.google.maps.LatLng(17.64, 77.57));
+      bounds.extend(new window.google.maps.LatLng(17.72, 77.65));
       
       projects.forEach((project) => {
         bounds.extend(new window.google.maps.LatLng(project.location.lat, project.location.lng));
@@ -100,15 +106,42 @@ export const GoogleMap = ({ projects, gisFeatures, apiKey }: GoogleMapProps) => 
         }
       });
 
-      if (projects.length > 0 || gisFeatures.length > 0) {
-        googleMap.fitBounds(bounds);
-        // Add padding
-        googleMap.setOptions({
-          zoom: googleMap.getZoom()! > 10 ? googleMap.getZoom()! - 1 : googleMap.getZoom(),
-        });
-      }
+      googleMap.fitBounds(bounds);
+      // Add padding
+      googleMap.setOptions({
+        zoom: googleMap.getZoom()! > 10 ? googleMap.getZoom()! - 1 : googleMap.getZoom(),
+      });
+    } else {
+      // If no projects, focus on NIMZ area
+      const nimzBounds = new window.google.maps.LatLngBounds(
+        new window.google.maps.LatLng(17.64, 77.57),
+        new window.google.maps.LatLng(17.72, 77.65)
+      );
+      googleMap.fitBounds(nimzBounds);
     }
   }, [isLoaded, projects, gisFeatures]);
+
+  // Add NIMZ boundary map overlay (only once when map is ready)
+  useEffect(() => {
+    if (!map || !window.google?.maps || overlayRef.current) return;
+
+    // Bounds calculated based on the NIMZ area (~12635 acres, approximately 8-9km across)
+    const imageBounds = new window.google.maps.LatLngBounds(
+      new window.google.maps.LatLng(17.64, 77.57), // Southwest corner
+      new window.google.maps.LatLng(17.72, 77.65)  // Northeast corner
+    );
+
+    // Create ground overlay with 65% opacity (0.65)
+    const nimzOverlay = new window.google.maps.GroundOverlay(
+      '/images/nimz-boundary-map.png', // Image path - user needs to place the image here
+      imageBounds
+    );
+
+    // Set opacity to 65% (0.65)
+    nimzOverlay.setOpacity(0.65);
+    nimzOverlay.setMap(map);
+    overlayRef.current = nimzOverlay;
+  }, [map]);
 
   // Add project markers
   useEffect(() => {
@@ -257,6 +290,16 @@ export const GoogleMap = ({ projects, gisFeatures, apiKey }: GoogleMapProps) => 
 
     setMarkers(newMarkers);
   }, [map, projects, gisFeatures]);
+
+  // Cleanup overlay on unmount
+  useEffect(() => {
+    return () => {
+      if (overlayRef.current) {
+        overlayRef.current.setMap(null);
+        overlayRef.current = null;
+      }
+    };
+  }, []);
 
   if (!isLoaded) {
     return (

@@ -14,14 +14,14 @@ const GIS = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">{t('common.gis')}</h1>
-        <p className="text-gray-600 mt-1">Geographic Information System & Spatial Mapping</p>
+        <p className="text-gray-600 mt-1">{t('gis.subtitle')}</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Project Locations Map - India</CardTitle>
+          <CardTitle>{t('gis.projectLocationsMap')}</CardTitle>
           <p className="text-sm text-gray-600 mt-1">
-            Interactive map showing all project locations and GIS features across India
+            {t('gis.mapDescription')}
           </p>
         </CardHeader>
         <CardContent>
@@ -32,7 +32,7 @@ const GIS = () => {
       {/* GIS Features List */}
       <Card>
         <CardHeader>
-          <CardTitle>GIS Features</CardTitle>
+          <CardTitle>{t('gis.gisFeatures')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -52,7 +52,7 @@ const GIS = () => {
                   </span>
                   {feature.properties.projectId && (
                     <span className="px-2 py-1 bg-gray-200 rounded text-xs">
-                      Project: {feature.properties.projectId}
+                      {t('common.project')}: {feature.properties.projectId}
                     </span>
                   )}
                 </div>

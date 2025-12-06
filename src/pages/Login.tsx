@@ -113,7 +113,7 @@ const Login = () => {
                       </h3>
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-gray-700">Access Level:</span>
+                          <span className="font-medium text-gray-700">{t('common.accessLevel')}:</span>
                           <span className="px-2 py-1 bg-white rounded text-primary-700 font-medium text-xs">
                             {selectedRoleData.accessLevel}
                           </span>
@@ -138,7 +138,7 @@ const Login = () => {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Authenticating...
+                  {t('login.authenticating')}
                 </>
               ) : (
                 t('login.enter')

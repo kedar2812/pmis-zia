@@ -59,11 +59,11 @@ const Scheduling = () => {
   const handleTaskToggle = async (taskId: string) => {
     try {
       await toggleTaskComplete(taskId);
-      toast.success('Task updated', {
-        description: 'Task status has been updated.',
+      toast.success(t('scheduling.taskUpdated'), {
+        description: t('scheduling.taskStatusUpdated'),
       });
     } catch (error) {
-      toast.error('Failed to update task');
+      toast.error(t('scheduling.failedToUpdate'));
     }
   };
 
@@ -76,7 +76,7 @@ const Scheduling = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">{t('common.schedule')}</h1>
-          <p className="text-gray-600 mt-1">Project Scheduling and Timeline Tracking</p>
+          <p className="text-gray-600 mt-1">{t('scheduling.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -85,7 +85,7 @@ const Scheduling = () => {
             className="flex items-center gap-2"
           >
             <BarChart3 size={18} />
-            Gantt Chart
+            {t('scheduling.ganttChart')}
           </Button>
           <Button
             variant={viewMode === 'list' ? 'default' : 'outline'}
@@ -93,7 +93,7 @@ const Scheduling = () => {
             className="flex items-center gap-2"
           >
             <List size={18} />
-            List View
+            {t('scheduling.listView')}
           </Button>
         </div>
       </div>
@@ -102,13 +102,13 @@ const Scheduling = () => {
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-gray-700">Filter by Project:</label>
+            <label className="text-sm font-medium text-gray-700">{t('scheduling.filterByProject')}</label>
             <select
               value={selectedProjectId || 'all'}
               onChange={(e) => setSelectedProjectId(e.target.value === 'all' ? undefined : e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-600 focus:border-primary-600"
             >
-              <option value="all">All Projects</option>
+              <option value="all">{t('common.allProjects')}</option>
               {projects.map((project) => (
                 <option key={project.id} value={project.id}>
                   {project.name}
@@ -123,7 +123,7 @@ const Scheduling = () => {
       {viewMode === 'gantt' && (
         <Card>
           <CardHeader>
-            <CardTitle>Gantt Chart View</CardTitle>
+            <CardTitle>{t('scheduling.ganttChartView')}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="h-[600px]">
@@ -150,7 +150,7 @@ const Scheduling = () => {
                 <p className="text-sm text-gray-600 mt-1">{project.description}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-gray-600">Project Progress</p>
+                <p className="text-sm text-gray-600">{t('scheduling.projectProgress')}</p>
                 <p className="text-2xl font-bold text-primary-600">{projectProgress.toFixed(0)}%</p>
               </div>
             </div>
@@ -185,14 +185,14 @@ const Scheduling = () => {
                             <h3 className="font-medium">{task.name}</h3>
                             {isCritical && (
                               <span className="px-2 py-1 bg-error-50 text-error-700 rounded text-xs font-medium border border-error-200">
-                                Critical Path
+                                {t('scheduling.criticalPath')}
                               </span>
                             )}
                           </div>
                           <div className="flex items-center gap-4 text-sm text-gray-600">
-                            <span>Start: {new Date(task.startDate).toLocaleDateString()}</span>
-                            <span>End: {new Date(task.endDate).toLocaleDateString()}</span>
-                            <span>Assigned: {task.assignedTo}</span>
+                            <span>{t('scheduling.start')}: {new Date(task.startDate).toLocaleDateString()}</span>
+                            <span>{t('scheduling.end')}: {new Date(task.endDate).toLocaleDateString()}</span>
+                            <span>{t('scheduling.assigned')}: {task.assignedTo}</span>
                           </div>
                         </div>
                       </div>

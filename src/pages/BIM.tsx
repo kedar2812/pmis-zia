@@ -94,14 +94,14 @@ const BIM = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">{t('common.bim')}</h1>
-        <p className="text-gray-600 mt-1">3D Building Information Modeling Viewer</p>
+        <p className="text-gray-600 mt-1">{t('bim.subtitle')}</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>3D Model Viewer</CardTitle>
+          <CardTitle>{t('bim.modelViewer')}</CardTitle>
           <p className="text-sm text-gray-600 mt-1">
-            Interactive 3D visualization of infrastructure components
+            {t('bim.interactiveVisualization')}
           </p>
         </CardHeader>
         <CardContent>
@@ -115,8 +115,8 @@ const BIM = () => {
             <div className="flex items-center gap-3">
               <Box className="text-primary-600" size={32} />
               <div>
-                <p className="font-medium">Infrastructure Models</p>
-                <p className="text-sm text-gray-600">3D models of project components</p>
+                <p className="font-medium">{t('bim.infrastructureModels')}</p>
+                <p className="text-sm text-gray-600">{t('bim.modelsDescription')}</p>
               </div>
             </div>
           </CardContent>
@@ -127,8 +127,8 @@ const BIM = () => {
             <div className="flex items-center gap-3">
               <RotateCw className="text-primary-600" size={32} />
               <div>
-                <p className="font-medium">Interactive View</p>
-                <p className="text-sm text-gray-600">Rotate, zoom, and explore models</p>
+                <p className="font-medium">{t('bim.interactiveView')}</p>
+                <p className="text-sm text-gray-600">{t('bim.rotateZoomExplore')}</p>
               </div>
             </div>
           </CardContent>
@@ -139,8 +139,8 @@ const BIM = () => {
             <div className="flex items-center gap-3">
               <Box className="text-primary-600" size={32} />
               <div>
-                <p className="font-medium">BIM Integration</p>
-                <p className="text-sm text-gray-600">Building Information Modeling data</p>
+                <p className="font-medium">{t('bim.bimIntegration')}</p>
+                <p className="text-sm text-gray-600">{t('bim.bimData')}</p>
               </div>
             </div>
           </CardContent>

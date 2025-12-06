@@ -72,7 +72,7 @@ const RiskManagement = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">{t('common.risk')}</h1>
-        <p className="text-gray-600 mt-1">Risk Register and Mitigation Planning</p>
+        <p className="text-gray-600 mt-1">{t('risk.subtitle')}</p>
       </div>
 
       {/* Summary Cards */}
@@ -81,7 +81,7 @@ const RiskManagement = () => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Total Risks</p>
+                <p className="text-sm text-gray-600">{t('risk.totalRisks')}</p>
                 <p className="text-2xl font-bold mt-2">{risks.length}</p>
               </div>
               <AlertTriangle className="text-orange-600" size={32} />
@@ -93,7 +93,7 @@ const RiskManagement = () => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Active Risks</p>
+                <p className="text-sm text-gray-600">{t('risk.activeRisks')}</p>
                 <p className="text-2xl font-bold mt-2">
                   {risks.filter((r) => r.status !== 'Closed').length}
                 </p>
@@ -107,7 +107,7 @@ const RiskManagement = () => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">High Impact</p>
+                <p className="text-sm text-gray-600">{t('risk.highImpact')}</p>
                 <p className="text-2xl font-bold mt-2">
                   {risks.filter((r) => r.impact === 'High' || r.impact === 'Critical').length}
                 </p>
@@ -121,7 +121,7 @@ const RiskManagement = () => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Mitigated</p>
+                <p className="text-sm text-gray-600">{t('risk.mitigated')}</p>
                 <p className="text-2xl font-bold mt-2">
                   {risks.filter((r) => r.status === 'Mitigated' || r.status === 'Closed').length}
                 </p>
@@ -136,7 +136,7 @@ const RiskManagement = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Risks by Category</CardTitle>
+            <CardTitle>{t('risk.risksByCategory')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -153,7 +153,7 @@ const RiskManagement = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Risks by Status</CardTitle>
+            <CardTitle>{t('risk.risksByStatus')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -204,11 +204,11 @@ const RiskManagement = () => {
                           </div>
                           <p className="text-sm text-gray-600 mb-3">{risk.description}</p>
                           <div className="flex flex-wrap gap-2">
-                            <span className="text-xs text-gray-500">Category:</span>
+                            <span className="text-xs text-gray-500">{t('common.category')}:</span>
                             <span className="px-2 py-1 bg-gray-200 rounded text-xs">{risk.category}</span>
-                            <span className="text-xs text-gray-500 ml-2">Owner:</span>
+                            <span className="text-xs text-gray-500 ml-2">{t('common.owner')}:</span>
                             <span className="px-2 py-1 bg-gray-200 rounded text-xs">{risk.owner}</span>
-                            <span className="text-xs text-gray-500 ml-2">Identified:</span>
+                            <span className="text-xs text-gray-500 ml-2">{t('common.identified')}:</span>
                             <span className="px-2 py-1 bg-gray-200 rounded text-xs">
                               {new Date(risk.identifiedDate).toLocaleDateString()}
                             </span>
@@ -218,12 +218,12 @@ const RiskManagement = () => {
                           <span
                             className={`px-3 py-1 rounded text-xs font-medium ${getImpactColor(risk.impact)}`}
                           >
-                            Impact: {risk.impact}
+                            {t('common.impact')}: {risk.impact}
                           </span>
                           <span
                             className={`px-3 py-1 rounded text-xs font-medium ${getPriorityColor(risk.probability).bg} ${getPriorityColor(risk.probability).text}`}
                           >
-                            Probability: {risk.probability}
+                            {t('common.probability')}: {risk.probability}
                           </span>
                           <span
                             className={`px-3 py-1 rounded text-xs font-medium ${getStatusBadgeColor(risk.status)}`}
@@ -234,7 +234,7 @@ const RiskManagement = () => {
                       </div>
                       {risk.mitigationPlan && (
                         <div className="mt-3 pt-3 border-t border-gray-200">
-                          <p className="text-sm font-medium mb-1">Mitigation Plan:</p>
+                          <p className="text-sm font-medium mb-1">{t('risk.mitigationPlan')}</p>
                           <p className="text-sm text-gray-600">{risk.mitigationPlan}</p>
                         </div>
                       )}

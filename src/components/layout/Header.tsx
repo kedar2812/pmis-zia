@@ -30,9 +30,9 @@ const Header = () => {
             onChange={(e) => setLanguage(e.target.value as Language)}
             className="w-32"
           >
-            <option value="en">English</option>
-            <option value="hi">हिंदी</option>
-            <option value="te">తెలుగు</option>
+            <option value="en">{t('header.english')}</option>
+            <option value="hi">{t('header.hindi')}</option>
+            <option value="te">{t('header.telugu')}</option>
           </Select>
         </div>
 
@@ -53,7 +53,7 @@ const Header = () => {
               </div>
               <div className="max-h-96 overflow-y-auto">
                 <div className="p-4 text-sm text-gray-600">
-                  {t('common.notifications')} - Coming soon
+                  {t('common.notifications')} - {t('common.comingSoon')}
                 </div>
               </div>
             </div>

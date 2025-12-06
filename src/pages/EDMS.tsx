@@ -84,26 +84,26 @@ const EDMS = () => {
 
   const handleDelete = async (id: string) => {
     if (!hasPermission('edms:delete')) {
-      toast.error('Permission Denied', {
-        description: 'You do not have permission to delete documents. Contact your administrator.',
+      toast.error(t('edms.permissionDenied'), {
+        description: t('edms.noDeletePermission'),
       });
       return;
     }
     await deleteDocument(id);
-    toast.success('Document deleted', {
-      description: 'The document has been removed from the repository.',
+    toast.success(t('edms.documentDeleted'), {
+      description: t('edms.documentRemoved'),
     });
   };
 
   const handleDownload = (doc: Document) => {
-    toast.info('Download started', {
-      description: `Downloading ${doc.name}...`,
+    toast.info(t('edms.downloadStarted'), {
+      description: `${t('edms.downloading')} ${doc.name}...`,
     });
   };
 
   const handleView = (doc: Document) => {
-    toast.info('Opening document', {
-      description: `Viewing ${doc.name}...`,
+    toast.info(t('edms.openingDocument'), {
+      description: `${t('edms.viewing')} ${doc.name}...`,
     });
   };
 
@@ -112,7 +112,7 @@ const EDMS = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-primary-950">{t('common.documents')}</h1>
-          <p className="text-gray-600 mt-1">Electronic Document Management System</p>
+          <p className="text-gray-600 mt-1">{t('edms.subtitle')}</p>
         </div>
         <div className="flex gap-2">
           {hasPermission('edms:upload') && (
@@ -133,7 +133,7 @@ const EDMS = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <input
                 type="text"
-                placeholder="Search documents..."
+                placeholder={t('edms.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -152,11 +152,11 @@ const EDMS = () => {
               className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-600 focus:border-primary-600"
               aria-label="Filter by status"
             >
-              <option value="all">All Status</option>
-              <option value="Draft">Draft</option>
-              <option value="Under Review">Under Review</option>
-              <option value="Approved">Approved</option>
-              <option value="Rejected">Rejected</option>
+              <option value="all">{t('edms.allStatus')}</option>
+              <option value="Draft">{t('status.draft')}</option>
+              <option value="Under Review">{t('status.underReview')}</option>
+              <option value="Approved">{t('status.approved')}</option>
+              <option value="Rejected">{t('status.rejected')}</option>
             </select>
             <select
               value={typeFilter}
@@ -167,7 +167,7 @@ const EDMS = () => {
               className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-600 focus:border-primary-600"
               aria-label="Filter by type"
             >
-              <option value="all">All Types</option>
+              <option value="all">{t('edms.allTypes')}</option>
               <option value="Drawing">Drawing</option>
               <option value="Report">Report</option>
               <option value="Contract">Contract</option>
@@ -180,19 +180,19 @@ const EDMS = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Document Repository ({filteredDocuments.length} documents)</CardTitle>
+          <CardTitle>{t('edms.documentRepository')} ({filteredDocuments.length} {t('edms.documents')})</CardTitle>
         </CardHeader>
         <CardContent>
           {paginatedDocuments.length === 0 ? (
             <EmptyState
               icon={FileText}
-              title="No documents found"
+              title={t('edms.noDocumentsFound')}
               description={
                 searchQuery || statusFilter !== 'all' || typeFilter !== 'all'
-                  ? 'Try adjusting your filters to see more results.'
-                  : 'Upload your first document to get started.'
+                  ? t('edms.adjustFilters')
+                  : t('edms.uploadFirst')
               }
-              actionLabel={hasPermission('edms:upload') ? 'Upload Document' : undefined}
+              actionLabel={hasPermission('edms:upload') ? t('edms.uploadDocument') : undefined}
               onAction={hasPermission('edms:upload') ? () => setIsUploadModalOpen(true) : undefined}
             />
           ) : (
@@ -202,12 +202,12 @@ const EDMS = () => {
                   <thead>
                     <tr className="border-b border-gray-200">
                       <th className="text-left py-3 px-4 font-semibold text-gray-700">{t('common.name')}</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Type</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Category</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Version</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Size</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-700">{t('common.type')}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-700">{t('common.category')}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-700">{t('common.version')}</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-700">{t('common.size')}</th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-700">{t('common.status')}</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Uploaded By</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-700">{t('common.uploadedBy')}</th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-700">{t('common.date')}</th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-700">{t('common.actions')}</th>
                     </tr>
@@ -278,9 +278,9 @@ const EDMS = () => {
               {totalPages > 1 && (
                 <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
                   <p className="text-sm text-gray-600">
-                    Showing {(currentPage - 1) * itemsPerPage + 1} to{' '}
-                    {Math.min(currentPage * itemsPerPage, filteredDocuments.length)} of{' '}
-                    {filteredDocuments.length} documents
+                    {t('edms.showing')} {(currentPage - 1) * itemsPerPage + 1} {t('edms.to')}{' '}
+                    {Math.min(currentPage * itemsPerPage, filteredDocuments.length)} {t('edms.of')}{' '}
+                    {filteredDocuments.length} {t('edms.documents')}
                   </p>
                   <div className="flex gap-2">
                     <Button
@@ -289,10 +289,10 @@ const EDMS = () => {
                       onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                       disabled={currentPage === 1}
                     >
-                      Previous
+                      {t('edms.previous')}
                     </Button>
                     <span className="px-4 py-2 text-sm text-gray-700">
-                      Page {currentPage} of {totalPages}
+                      {t('edms.page')} {currentPage} {t('edms.of')} {totalPages}
                     </span>
                     <Button
                       variant="outline"
@@ -300,7 +300,7 @@ const EDMS = () => {
                       onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                       disabled={currentPage === totalPages}
                     >
-                      Next
+                      {t('edms.next')}
                     </Button>
                   </div>
                 </div>

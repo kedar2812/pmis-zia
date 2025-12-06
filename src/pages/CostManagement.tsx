@@ -58,7 +58,7 @@ const CostManagement = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">{t('common.cost')}</h1>
-        <p className="text-gray-600 mt-1">Budget Forecasting and Cost Management</p>
+        <p className="text-gray-600 mt-1">{t('cost.subtitle')}</p>
       </div>
 
       {/* Summary Cards */}
@@ -78,7 +78,7 @@ const CostManagement = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Total Budget</p>
+                    <p className="text-sm text-gray-600">{t('cost.totalBudget')}</p>
                     <p className="text-2xl font-bold mt-2">
                       {formatCurrency(
                         budgetByProject.reduce((sum, item) => sum + item.totalAllocated, 0)
@@ -94,7 +94,7 @@ const CostManagement = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Total Spent</p>
+                    <p className="text-sm text-gray-600">{t('cost.totalSpent')}</p>
                     <p className="text-2xl font-bold mt-2">
                       {formatCurrency(
                         budgetByProject.reduce((sum, item) => sum + item.totalSpent, 0)
@@ -110,7 +110,7 @@ const CostManagement = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Committed</p>
+                    <p className="text-sm text-gray-600">{t('cost.committed')}</p>
                     <p className="text-2xl font-bold mt-2">
                       {formatCurrency(
                         budgetByProject.reduce((sum, item) => sum + item.totalCommitted, 0)
@@ -126,7 +126,7 @@ const CostManagement = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Remaining</p>
+                    <p className="text-sm text-gray-600">{t('cost.remaining')}</p>
                     <p className="text-2xl font-bold mt-2">
                       {formatCurrency(
                         budgetByProject.reduce((sum, item) => sum + item.totalRemaining, 0)
@@ -144,7 +144,7 @@ const CostManagement = () => {
       {/* Forecast Chart */}
       <Card>
         <CardHeader>
-          <CardTitle>Cost Forecast vs Actual</CardTitle>
+          <CardTitle>{t('cost.costForecastVsActual')}</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={400}>
@@ -159,14 +159,14 @@ const CostManagement = () => {
                 dataKey="forecasted"
                 stroke="#94a3b8"
                 strokeWidth={2}
-                name="Forecasted"
+                name={t('cost.forecasted')}
               />
               <Line
                 type="monotone"
                 dataKey="actual"
                 stroke="#3b82f6"
                 strokeWidth={2}
-                name="Actual"
+                name={t('cost.actual')}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -184,7 +184,7 @@ const CostManagement = () => {
               <div className="space-y-4">
                 <div>
                   <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-gray-600">Budget Utilization</span>
+                    <span className="text-gray-600">{t('cost.budgetUtilization')}</span>
                     <span className="font-medium">{utilization.toFixed(1)}%</span>
                   </div>
                   <div className="w-full h-3 bg-gray-200 rounded-full">
@@ -199,7 +199,7 @@ const CostManagement = () => {
 
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
                   <div>
-                    <p className="text-sm text-gray-600">Allocated</p>
+                    <p className="text-sm text-gray-600">{t('cost.allocated')}</p>
                     <p className="text-lg font-semibold">{formatCurrency(totalAllocated)}</p>
                   </div>
                   <div>
@@ -207,7 +207,7 @@ const CostManagement = () => {
                     <p className="text-lg font-semibold">{formatCurrency(totalSpent)}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Committed</p>
+                    <p className="text-sm text-gray-600">{t('cost.committed')}</p>
                     <p className="text-lg font-semibold">{formatCurrency(totalCommitted)}</p>
                   </div>
                   <div>
@@ -218,7 +218,7 @@ const CostManagement = () => {
 
                 {/* Budget breakdown by category */}
                 <div className="pt-4 border-t border-gray-200">
-                  <p className="text-sm font-medium mb-3">Budget by Category</p>
+                  <p className="text-sm font-medium mb-3">{t('cost.budgetByCategory')}</p>
                   <div className="space-y-2">
                     {budgets
                       .filter((b) => b.projectId === project.id)

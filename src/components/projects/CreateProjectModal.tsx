@@ -7,6 +7,8 @@ import { Card } from '@/components/ui/Card';
 import { toast } from 'sonner';
 import type { Project } from '@/mock/interfaces';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { SmartInput } from '@/components/ui/SmartInput';
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -15,6 +17,7 @@ interface CreateProjectModalProps {
 }
 
 export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectModalProps) => {
+  const { t } = useLanguage();
   const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -34,35 +37,35 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Project name is required';
+      newErrors.name = t('project.projectNameRequired');
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
+      newErrors.description = t('project.descriptionRequired');
     }
 
     if (!formData.startDate) {
-      newErrors.startDate = 'Start date is required';
+      newErrors.startDate = t('project.startDateRequired');
     }
 
     if (!formData.endDate) {
-      newErrors.endDate = 'End date is required';
+      newErrors.endDate = t('project.endDateRequired');
     }
 
     if (formData.startDate && formData.endDate && new Date(formData.startDate) > new Date(formData.endDate)) {
-      newErrors.endDate = 'End date must be after start date';
+      newErrors.endDate = t('project.endDateAfterStart');
     }
 
     if (!formData.budget || parseFloat(formData.budget) <= 0) {
-      newErrors.budget = 'Valid budget amount is required';
+      newErrors.budget = t('project.validBudgetRequired');
     }
 
     if (!formData.category.trim()) {
-      newErrors.category = 'Category is required';
+      newErrors.category = t('project.categoryRequired');
     }
 
     if (!formData.manager.trim()) {
-      newErrors.manager = 'Project manager is required';
+      newErrors.manager = t('project.managerRequired');
     }
 
     setErrors(newErrors);
@@ -73,7 +76,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
     e.preventDefault();
 
     if (!validateForm()) {
-      toast.error('Please fix the form errors');
+      toast.error(t('project.fixFormErrors'));
       return;
     }
 
@@ -100,8 +103,8 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
       };
 
       await onSave(projectData);
-      toast.success('Project created successfully!', {
-        description: `${projectData.name} has been added to the system.`,
+      toast.success(t('project.createdSuccessfully'), {
+        description: `${projectData.name} ${t('project.hasBeenAdded')}`,
       });
 
       // Reset form
@@ -118,8 +121,8 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
       setErrors({});
       onClose();
     } catch (error) {
-      toast.error('Failed to create project', {
-        description: 'Please try again.',
+      toast.error(t('project.failedToCreate'), {
+        description: t('project.tryAgain'),
       });
     } finally {
       setIsSubmitting(false);
@@ -166,7 +169,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
         >
           <Card className="p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold text-primary-950">Create New Project</h2>
+              <h2 className="text-2xl font-semibold text-primary-950">{t('project.createNewProject')}</h2>
               <button
                 onClick={handleClose}
                 disabled={isSubmitting}
@@ -180,7 +183,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Project Name <span className="text-red-500">*</span>
+                  {t('project.projectName')} <span className="text-red-500">{t('project.required')}</span>
                 </label>
                 <input
                   id="name"
@@ -190,34 +193,29 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
                   className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary-600 focus:border-primary-600 ${
                     errors.name ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="Enter project name"
+                  placeholder={t('project.enterProjectName')}
                   disabled={isSubmitting}
                 />
                 {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
               </div>
 
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                  Description <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  id="description"
+                <SmartInput
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(value) => setFormData({ ...formData, description: value })}
+                  placeholder={t('project.enterDescription')}
                   rows={3}
-                  className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary-600 focus:border-primary-600 ${
-                    errors.description ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter project description"
                   disabled={isSubmitting}
+                  label={t('project.description')}
+                  required
+                  error={errors.description}
                 />
-                {errors.description && <p className="text-sm text-red-500 mt-1">{errors.description}</p>}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
-                    Start Date <span className="text-red-500">*</span>
+                    {t('project.startDate')} <span className="text-red-500">{t('project.required')}</span>
                   </label>
                   <input
                     id="startDate"
@@ -234,7 +232,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
 
                 <div>
                   <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">
-                    End Date <span className="text-red-500">*</span>
+                    {t('project.endDate')} <span className="text-red-500">{t('project.required')}</span>
                   </label>
                   <input
                     id="endDate"
@@ -253,7 +251,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
-                    Budget (₹) <span className="text-red-500">*</span>
+                    {t('project.budget')} <span className="text-red-500">{t('project.required')}</span>
                   </label>
                   <input
                     id="budget"
@@ -265,7 +263,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
                     className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary-600 focus:border-primary-600 ${
                       errors.budget ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    placeholder="Enter budget amount"
+                    placeholder={t('project.enterBudget')}
                     disabled={isSubmitting}
                   />
                   {errors.budget && <p className="text-sm text-red-500 mt-1">{errors.budget}</p>}
@@ -273,7 +271,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
 
                 <div>
                   <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                    Status <span className="text-red-500">*</span>
+                    {t('project.status')} <span className="text-red-500">{t('project.required')}</span>
                   </label>
                   <select
                     id="status"
@@ -282,11 +280,11 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-600 focus:border-primary-600"
                     disabled={isSubmitting}
                   >
-                    <option value="Planning">Planning</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="On Hold">On Hold</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Cancelled">Cancelled</option>
+                    <option value="Planning">{t('status.planning')}</option>
+                    <option value="In Progress">{t('status.inProgress')}</option>
+                    <option value="On Hold">{t('status.onHold')}</option>
+                    <option value="Completed">{t('status.completed')}</option>
+                    <option value="Cancelled">{t('status.cancelled')}</option>
                   </select>
                 </div>
               </div>
@@ -294,7 +292,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
-                    Category <span className="text-red-500">*</span>
+                    {t('project.category')} <span className="text-red-500">{t('project.required')}</span>
                   </label>
                   <input
                     id="category"
@@ -304,7 +302,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
                     className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary-600 focus:border-primary-600 ${
                       errors.category ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    placeholder="e.g., Infrastructure, Utilities"
+                    placeholder={t('project.categoryPlaceholder')}
                     disabled={isSubmitting}
                   />
                   {errors.category && <p className="text-sm text-red-500 mt-1">{errors.category}</p>}
@@ -312,7 +310,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
 
                 <div>
                   <label htmlFor="manager" className="block text-sm font-medium text-gray-700 mb-1">
-                    Project Manager <span className="text-red-500">*</span>
+                    {t('project.projectManager')} <span className="text-red-500">{t('project.required')}</span>
                   </label>
                   <input
                     id="manager"
@@ -322,7 +320,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
                     className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary-600 focus:border-primary-600 ${
                       errors.manager ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    placeholder="Enter manager name"
+                    placeholder={t('project.enterManagerName')}
                     disabled={isSubmitting}
                   />
                   {errors.manager && <p className="text-sm text-red-500 mt-1">{errors.manager}</p>}
@@ -336,7 +334,7 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
                   onClick={handleClose}
                   disabled={isSubmitting}
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
                 <Button
                   type="submit"
@@ -346,10 +344,10 @@ export const CreateProjectModal = ({ isOpen, onClose, onSave }: CreateProjectMod
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creating...
+                      {t('common.creating')}
                     </>
                   ) : (
-                    'Create Project'
+                    t('projects.createProject')
                   )}
                 </Button>
               </div>

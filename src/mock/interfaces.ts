@@ -25,7 +25,14 @@ export interface RolePermission {
 
 // Project Interfaces
 export interface Project {
-  landAcquisitionStatus?: number; // 0-100% progress for land acquisition
+  landAcquisitionStatus?: number; // 0-100% progress for land acquisition (deprecated - use land_data)
+  land_data?: {
+    total_required_acres: number;
+    acquired_acres: number;
+    notification_issued_acres: number;
+    litigation_acres: number;
+    last_updated: string;
+  };
   id: string;
   name: string;
   description: string;

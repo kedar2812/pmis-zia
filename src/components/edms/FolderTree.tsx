@@ -17,12 +17,14 @@ interface TreeNodeProps {
   level: number;
   selectedPath: string[];
   onSelect: (path: string[]) => void;
+  parentPath?: string[];
 }
 
-const TreeNode = ({ node, level, selectedPath, onSelect }: TreeNodeProps) => {
+const TreeNode = ({ node, level, selectedPath, onSelect, parentPath = [] }: TreeNodeProps) => {
   const [isExpanded, setIsExpanded] = useState(level < 1);
   const hasChildren = node.children && node.children.length > 0;
-  const nodePath = [node.id];
+  // Build full path from root to this node
+  const nodePath = [...parentPath, node.id];
   const isSelected = selectedPath.length > 0 && selectedPath[selectedPath.length - 1] === node.id;
 
   const handleArrowClick = (e: React.MouseEvent) => {
@@ -88,6 +90,7 @@ const TreeNode = ({ node, level, selectedPath, onSelect }: TreeNodeProps) => {
                 level={level + 1}
                 selectedPath={selectedPath}
                 onSelect={onSelect}
+                parentPath={nodePath}
               />
             ))}
           </motion.div>

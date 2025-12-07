@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { useMockData } from '@/hooks/useMockData';
 import { CreateProjectModal } from '@/components/projects/CreateProjectModal';
 import { ProjectDetailModal } from '@/components/projects/ProjectDetailModal';
+import { LandStats } from '@/components/projects/LandStats';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { FolderOpen, Plus, Search, DollarSign, TrendingUp } from 'lucide-react';
 import Button from '@/components/ui/Button';
@@ -300,7 +301,9 @@ const Projects = () => {
                     </div>
 
                     {/* Land Acquisition Status */}
-                    {project.landAcquisitionStatus !== undefined && (
+                    {project.land_data ? (
+                      <LandStats project={project} />
+                    ) : project.landAcquisitionStatus !== undefined ? (
                       <div>
                         <div className="flex items-center justify-between text-sm mb-2">
                           <span className="text-gray-600">Land Acquisition Status</span>
@@ -323,7 +326,7 @@ const Projects = () => {
                           />
                         </div>
                       </div>
-                    )}
+                    ) : null}
                   </div>
                 </CardContent>
               </Card>
